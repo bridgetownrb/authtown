@@ -16,13 +16,11 @@ module Authtown
         end
       end
 
-      def current_user = Authtown::Current.user
-
       def init_current_user
         Authtown::Current.user =
           if rodauth.logged_in?
             account_id = rodauth.account_from_session[:id]
-            Authtown::Current.user&.id == account_id ? Authtown::Current.user : User.find(account_id)
+            User.find(account_id)
           end
       end
     end

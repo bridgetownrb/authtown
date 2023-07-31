@@ -41,4 +41,6 @@ module Authtown::ViewMixin
       view_class:, roda_app: self, bridgetown_site:
     )
   end
+
+  def current_user = Authtown::Current.user
 end
