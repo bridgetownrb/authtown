@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.version       = Authtown::VERSION
   spec.author        = "Bridgetown Team"
   spec.email         = "maintainers@bridgetownrb.com"
-  spec.summary       = "Sample code for creating new Bridgetown plugins"
+  spec.summary       = "Rodauth integration for Bridgetown"
   spec.homepage      = "https://github.com/bridgetownrb/authtown"
   spec.license       = "MIT"
 
