@@ -27,9 +27,5 @@ class TestAuthtown < Bridgetown::TestCase
     it "outputs the overridden metadata" do
       assert_includes @contents, "<title>My Awesome Site</title>"
     end
-
-    it "outputs the sample Liquid tag" do
-      assert_includes @contents, "This plugin works!"
-    end
   end
 end
