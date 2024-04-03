@@ -5,25 +5,33 @@ require "mail"
 require "authtown/builder"
 require "authtown/view_mixin"
 
-# ActiveRecord schema:
+### Simple migration strategy:
 #
-# class CreateUsers < ActiveRecord::Migration[7.0]
-#   def change
-#     create_table :users do |t|
-#       t.string :email, null: false, index: { unique: true }
-#       t.string :first_name
-#       t.string :password_hash, null: false
-#       t.timestamps
+# Sequel.migration do
+#   change do
+#     extension :date_arithmetic
+
+#     create_table(:users) do
+#       primary_key :id, type: :Bignum
+#       citext :email, null: false
+#       constraint :valid_email, email: /^[^,;@ \r\n]+@[^,@; \r\n]+\.[^,@; \r\n]+$/
+#       String :first_name
+#       String :password_hash, null: false
+#       index :email, unique: true
 #     end
-#   end
-# end
-#
-# class CreateAccountRememberKeys < ActiveRecord::Migration[7.0]
-#   def change
-#     create_table :account_remember_keys do |t|
-#       t.foreign_key :users, column: :id
-#       t.string :key, null: false
-#       t.datetime :deadline, null: false
+
+#     # Used by the remember me feature
+#     create_table(:account_remember_keys) do
+#       foreign_key :id, :users, primary_key: true, type: :Bignum
+#       String :key, null: false
+#       DateTime :deadline, { null: false, default: Sequel.date_add(Sequel::CURRENT_TIMESTAMP, days: 30) }
+#     end
+
+#     create_table(:account_password_reset_keys) do
+#       foreign_key :id, :users, primary_key: true, type: :Bignum
+#       String :key, null: false
+#       DateTime :deadline, { null: false, default: Sequel.date_add(Sequel::CURRENT_TIMESTAMP, days: 1) }
+#       DateTime :email_last_sent, null: false, default: Sequel::CURRENT_TIMESTAMP
 #     end
 #   end
 # end
@@ -65,8 +73,11 @@ Bridgetown.initializer :authtown do |
       app.plugin(:sessions, secret:)
 
       app.plugin :rodauth do
-        enable :login, :logout, :create_account, :remember, :reset_password
+
+        enable :login, :logout, :create_account, :remember, :reset_password, :internal_request
         hmac_secret secret
+
+        base_url config.url
 
         prefix "/auth"
 
@@ -101,7 +112,7 @@ Bridgetown.initializer :authtown do |
           # Make sure timestamps get saved
           account[:created_at] = account[:updated_at] = Time.now
 
-          account[:first_name] = param(:first_name)
+          account[:first_name] = param(:first_name) if param(:first_name)
         end
 
         after_login do
