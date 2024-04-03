@@ -9,7 +9,11 @@ module Authtown
         rodauth.load_memory
 
         init_current_user
-        Lifeform::Form.rodauth = rodauth
+
+        # hook :authtown, :initialized do |rodauth|
+        #   Lifeform::Form.rodauth = rodauth
+        # end
+        Bridgetown::Hooks.trigger(:authtown, :initialized, rodauth)
 
         r.on "auth" do
           r.rodauth
@@ -20,7 +24,8 @@ module Authtown
         Authtown::Current.user =
           if rodauth.logged_in?
             account_id = rodauth.account_from_session[:id]
-            User.find(account_id)
+            user_class = bridgetown_site.config.authtown.user_class_resolver.()
+            user_class[account_id]
           end
       end
     end

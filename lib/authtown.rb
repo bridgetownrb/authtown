@@ -5,9 +5,6 @@ require "mail"
 require "authtown/builder"
 require "authtown/view_mixin"
 
-# REQUIRES:
-# init :"bridgetown-activerecord", sequel_support: :postgres
-
 # ActiveRecord schema:
 #
 # class CreateUsers < ActiveRecord::Migration[7.0]
@@ -31,9 +28,17 @@ require "authtown/view_mixin"
 #   end
 # end
 
-class Authtown::Current < ActiveSupport::CurrentAttributes
-  # @!parse def self.user = User.new
-  attribute :user
+Thread.attr_accessor :authtown_state
+class Authtown::Current
+  class << self
+    def thread_state = Thread.current.authtown_state ||= {}
+    
+    def user=(new_user)
+      thread_state[:user] = new_user
+    end
+
+    def user = thread_state[:user]
+  end
 end
 
 # rubocop:disable Metrics/BlockLength
@@ -42,8 +47,12 @@ end
 Bridgetown.initializer :authtown do |
   config,
   rodauth_config: nil,
-  account_landing_page: "/account/profile"
+  account_landing_page: "/account/profile",
+  user_class_resolver: ->{ User }
   |
+
+  config.authtown ||= {}
+  config.authtown.user_class_resolver ||= user_class_resolver
 
   config.only :server do
     require "authtown/routes/rodauth"
