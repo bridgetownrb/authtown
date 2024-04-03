@@ -5,6 +5,7 @@ require "mail"
 require "authtown/builder"
 require "authtown/view_mixin"
 
+# rubocop:disable Layout/LineLength
 ### Simple migration strategy:
 #
 # Sequel.migration do
@@ -35,12 +36,13 @@ require "authtown/view_mixin"
 #     end
 #   end
 # end
+# rubocop:enable Layout/LineLength
 
 Thread.attr_accessor :authtown_state
 class Authtown::Current
   class << self
     def thread_state = Thread.current.authtown_state ||= {}
-    
+
     def user=(new_user)
       thread_state[:user] = new_user
     end
@@ -56,7 +58,7 @@ Bridgetown.initializer :authtown do |
   config,
   rodauth_config: nil,
   account_landing_page: "/account/profile",
-  user_class_resolver: ->{ User }
+  user_class_resolver: -> { User }
   |
 
   config.authtown ||= {}
@@ -73,7 +75,6 @@ Bridgetown.initializer :authtown do |
       app.plugin(:sessions, secret:)
 
       app.plugin :rodauth do
-
         enable :login, :logout, :create_account, :remember, :reset_password, :internal_request
         hmac_secret secret
 
