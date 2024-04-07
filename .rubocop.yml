@@ -21,3 +21,6 @@ AllCops:
     - script/**/*
     - test/fixtures/**/*
     - vendor/**/*
+
+Metrics/ParameterLists:
+  Enabled: false

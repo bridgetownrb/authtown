@@ -40,7 +40,8 @@ Bridgetown.initializer :authtown do |
         logout_redirect "/"
 
         set_deadline_values? true # for remember, etc.
-        remember_deadline_interval days: 30 # TODO: why isn't this working? might be a schema issue with old AR
+        # TODO: why isn't this working? might be a schema issue with old AR:
+        remember_deadline_interval days: 30
         extend_remember_deadline? true
 
         login_label "Email Address"
