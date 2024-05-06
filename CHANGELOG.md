@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2024-05-06
+
+- Another refactor to support latest updates in Bridgetown v2
+
 ## [0.3.0] - 2024-04-07
 
 - Refactor how Bridgetown's view layer is integrated with Rodauth, improve performance

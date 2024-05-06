@@ -41,23 +41,11 @@ module Authtown::ViewMixin
         "#{kwargs.dig(:locals, :rodauth).prefix.delete_prefix("/")}/#{kwargs[:template]}"
     end
 
-    # TODO: this should really be some sort of exposed method from the routes plugin
-    response["X-Bridgetown-SSR"] = "1"
+    routes_manifest.routes.each do |route|
+      file, localized_slugs = route
+      next unless localized_slugs.first == kwargs[:template]
 
-    Bridgetown::Routes::Manifest.generate_manifest(bridgetown_site).each do |route|
-      file, localized_file_slugs = route
-
-      file_slug = localized_file_slugs.first
-
-      next unless file_slug == kwargs[:template]
-
-      Bridgetown::Routes::CodeBlocks.eval_route_file file, file_slug, self
-      route_block = Bridgetown::Routes::CodeBlocks.route_block(file_slug)
-      response.instance_variable_set(
-        :@_route_file_code, route_block.instance_variable_get(:@_route_file_code)
-      ) # could be nil
-      @_route_locals = kwargs[:locals]
-      return instance_exec(request, &route_block)
+      return run_file_route(file, slug: localized_slugs.first)
     end
 
     Bridgetown.logger.warn("Rodauth template not found: #{kwargs[:template]}")
