@@ -170,7 +170,7 @@ end
 
 <% if rodauth.logged_in? %>
   <p style="text-align:center">
-      It looks like you're already signed in. Would you like to <a href="/account/profile">view your profile?</a>
+    It looks like you're already signed in. Would you like to <a href="/account/profile">view your profile?</a>
   </p>
 <% end %>
 
@@ -214,7 +214,7 @@ end
 
 <% if rodauth.logged_in? %>
   <p style="text-align:center">
-      It looks like you're already signed in. Would you like to <a href="/account/profile">view your profile?</a>
+    It looks like you're already signed in. Would you like to <a href="/account/profile">view your profile?</a>
   </p>
 <% end %>
 
@@ -277,7 +277,7 @@ We'll still need ones for password reset, but let's hold off for the moment. We'
 
 ```erb
 ---<%
-rodauth.require_authentication
+rodauth.require_authentication # always include this before logged-in only routes
 
 render_with do
   layout :page,
