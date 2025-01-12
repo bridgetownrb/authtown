@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2025-01-12
+
+- Fix incorrect Rodauth method override
+
 ## [0.4.0] - 2024-05-06
 
 - Another refactor to support latest updates in Bridgetown v2

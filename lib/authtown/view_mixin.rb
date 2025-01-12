@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# This gets prepended into the RodaApp class
 module Authtown::ViewMixin
   def locals = @_route_locals
 

@@ -19,6 +19,7 @@ Bridgetown.initializer :authtown do |
 
   config.only :server do
     require "authtown/routes/rodauth"
+    require "authtown/rodauth_mixin"
 
     # @param app [Class<Roda>]
     config.roda do |app|
@@ -78,6 +79,8 @@ Bridgetown.initializer :authtown do |
 
         instance_exec(&rodauth_config) if rodauth_config
       end
+
+      app.rodauth.prepend Authtown::RodauthMixin
     end
   end
 
