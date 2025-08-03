@@ -1,6 +1,6 @@
 # Authtown: Rodauth integration for Bridgetown
 
-A Bridgetown plugin which provides authentication and account management via database access and SSR routes, powered by [Rodauth](https://rodauth.jeremyevans.net). 
+A Bridgetown plugin which provides authentication and account management via database access and SSR routes, powered by [Rodauth](https://rodauth.jeremyevans.net).
 
 **WIP — public 1.0 release coming soon once Bridgetown 2.0 ships!**
 
@@ -14,7 +14,12 @@ Run this command to add this plugin to your site's Gemfile:
 bundle add authtown
 ```
 
-Then set up a mail initializer file:
+You'll also need the lifeform gem to build the login form:
+```shell
+bundle add lifeform
+```
+
+Then set up a mail initializer file (in `config/mail.rb`):
 
 ```ruby
 Bridgetown.initializer :mail do |password:|
@@ -35,9 +40,7 @@ And call that from your configuration in `config/initializers.rb`:
 
 ```ruby
 only :server do
-  init :mail do # set up options below
-    password ENV.fetch("SERVICE_API_KEY", nil) # can come from .env file or hosting environment
-  end
+  init :mail, password: ENV.fetch("SERVICE_API_KEY", nil) # can come from .env file or hosting environment
 end
 ```
 
@@ -75,7 +78,7 @@ You will need to generate a secret key for Roda's session handling. Run `bin/bri
 RODA_SECRET_KEY=1f8dbd0da3a4...
 ```
 
-You will also need to generate a Sequel migration for your user accounts. Here is an example, you can tweak as necessary. Run `bin/bridgetown db::migrations:new filename=create_users`, then edit the file:
+You will also need to generate a Sequel migration for your user accounts. Here is an example, you can tweak as necessary. Run `bin/bridgetown db:migrations:new filename=create_users`, then edit the file:
 
 ```ruby
 Sequel.migration do
@@ -85,6 +88,7 @@ Sequel.migration do
     create_table(:users) do
       primary_key :id, type: :Bignum
       citext :email, null: false
+      # Not available on SQLite
       constraint :valid_email, email: /^[^,;@ \r\n]+@[^,@; \r\n]+\.[^,@; \r\n]+$/
       String :first_name
       String :password_hash, null: false
@@ -132,6 +136,8 @@ Now, let's set up our forms and auth pages. We'll begin by creating an Account f
 ```ruby
 # ./models/forms/account.rb
 
+require "lifeform" # Needed because Zeitwerk will try loading Forms::Lifeform and then fail.
+
 module Forms
   class Account < Lifeform::Form
     fields do
@@ -141,7 +147,7 @@ module Forms
             required: true,
             autocomplete: "username",
             autofocus: true
-      field :name,
+      field :first_name,
             label: "Your Name",
             autocomplete: "name",
             required: true
@@ -163,7 +169,7 @@ Next, let's create the pages for logging in or creating an account.
 ```erb
 ---<%
 render_with do
-  layout :page,
+  layout :page
   title "Sign In"
 end
 %>---
@@ -207,7 +213,7 @@ end
 ```erb
 ---<%
 render_with do
-  layout :page,
+  layout :page
   title "Sign Up"
 end
 %>---
@@ -255,7 +261,7 @@ end
 ```erb
 <form-errors>
   <p aria-live="assertive">
-    <% if flash[:error] %>
+    <% if flash[:error] || rodauth.field_error(rodauth.login_param) || rodauth.field_error(rodauth.password_param) %>
       <%= flash[:error] %>:
       <br/>
       <small>
@@ -280,13 +286,13 @@ We'll still need ones for password reset, but let's hold off for the moment. We'
 rodauth.require_authentication # always include this before logged-in only routes
 
 render_with do
-  layout :page,
+  layout :page
   title "Your Account"
 end
 %>---
 
 <%= markdownify do %>
-  
+
 Welcome back, **<%= current_user.first_name %>**.
 
 (other content here)
@@ -311,7 +317,7 @@ As a final step, we'll need to handle password reset. Add the following pages:
 ```erb
 ---<%
 render_with do
-  layout :page,
+  layout :page
   title "Reset Your Password"
 end
 %>---
@@ -339,7 +345,7 @@ end
 ```erb
 ---<%
 render_with do
-  layout :page,
+  layout :page
   title "Save New Password"
 end
 %>---
