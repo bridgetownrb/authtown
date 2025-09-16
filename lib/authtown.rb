@@ -5,7 +5,6 @@ require "mail"
 require "authtown/builder"
 require "authtown/view_mixin"
 
-# rubocop:disable Layout/LineLength
 ### Simple migration strategy:
 #
 # Sequel.migration do
@@ -36,7 +35,6 @@ require "authtown/view_mixin"
 #     end
 #   end
 # end
-# rubocop:enable Layout/LineLength
 
 Thread.attr_accessor :authtown_state
 class Authtown::Current

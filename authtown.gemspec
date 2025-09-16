@@ -17,7 +17,7 @@ Gem::Specification.new do |spec|
 
   spec.required_ruby_version = ">= 3.1"
 
-  spec.add_dependency "bridgetown", ">= 1.3.0", "< 2.0"
+  spec.add_dependency "bridgetown", ">= 2.0"
   spec.add_dependency "rodauth", ">= 2.30"
   spec.add_dependency "bcrypt", ">= 3.1"
   spec.add_dependency "mail", ">= 2.8"
