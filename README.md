@@ -2,7 +2,7 @@
 
 A Bridgetown plugin which provides authentication and account management via database access and SSR routes, powered by [Rodauth](https://rodauth.jeremyevans.net).
 
-**WIP — public 1.0 release coming soon once Bridgetown 2.0 ships!**
+**WIP — public 1.0 release coming soon after Bridgetown 2.1 ships!**
 
 ## Installation
 
