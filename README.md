@@ -187,13 +187,13 @@ end
       render f.field(
         rodauth.login_param,
         value: r.params[rodauth.login_param],
-        aria: { invalid: rodauth.field_error(rodauth.login_param).present? }
+        aria: { invalid: rodauth.field_error(rodauth.login_param) }
       )
     %>
     <%=
       render f.field(
         rodauth.password_param,
-        aria: { invalid: rodauth.field_error(rodauth.password_param).present? }
+        aria: { invalid: rodauth.field_error(rodauth.password_param) }
       ) %>
     <%=
       render f.field(:submit)
@@ -231,7 +231,7 @@ end
       render f.field(
         rodauth.login_param,
         value: r.params[rodauth.login_param],
-        aria: { invalid: rodauth.field_error(rodauth.login_param).present? }
+        aria: { invalid: rodauth.field_error(rodauth.login_param) }
       )
     %>
     <%=
@@ -243,7 +243,7 @@ end
     <%=
       render f.field(
         rodauth.password_param,
-        aria: { invalid: rodauth.field_error(rodauth.password_param).present? }
+        aria: { invalid: rodauth.field_error(rodauth.password_param) }
       ) %>
     <%=
       render f.field(:submit, label: rodauth.create_account_button)
@@ -329,7 +329,7 @@ end
     render f.field(
       rodauth.login_param,
       value: r.params[rodauth.login_param],
-      aria: { invalid: rodauth.field_error(rodauth.login_param).present? }
+      aria: { invalid: rodauth.field_error(rodauth.login_param) }
     )
   %>
   <%=
@@ -356,7 +356,7 @@ end
   <%=
     render f.field(
       rodauth.password_param,
-      aria: { invalid: rodauth.field_error(rodauth.password_param).present? }
+      aria: { invalid: rodauth.field_error(rodauth.password_param) }
     )
   %>
   <%=
